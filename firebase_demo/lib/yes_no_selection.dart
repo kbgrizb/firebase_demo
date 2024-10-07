@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gtk_flutter/src/people_dialog.dart';
 
 import 'app_state.dart';
 import 'src/widgets.dart';
@@ -18,7 +19,13 @@ class YesNoSelection extends StatelessWidget {
           child: Row(
             children: [
               FilledButton(
-                onPressed: () => onSelection(Attending.yes),
+                onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return const PeopleDialog();
+                  });
+            },
                 child: const Text('YES'),
               ),
               const SizedBox(width: 8),
@@ -35,7 +42,13 @@ class YesNoSelection extends StatelessWidget {
           child: Row(
             children: [
               TextButton(
-                onPressed: () => onSelection(Attending.yes),
+                onPressed: (){
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return const PeopleDialog();
+                  });
+            },
                 child: const Text('YES'),
               ),
               const SizedBox(width: 8),
@@ -52,8 +65,15 @@ class YesNoSelection extends StatelessWidget {
           child: Row(
             children: [
               StyledButton(
-                onPressed: () => onSelection(Attending.yes),
+                onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return const PeopleDialog();
+                  });
+            },
                 child: const Text('YES'),
+                
               ),
               const SizedBox(width: 8),
               StyledButton(
