@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'guest_book_message.dart'; 
 
-enum Attending { yes, no, unknown }
+enum Attending {yes, no}
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -18,19 +18,19 @@ class ApplicationState extends ChangeNotifier {
 
 int _attendees = 0;
 int get attendees => _attendees;
+set attendees(int people){
+  _attendees += people;
+}
 
-Attending _attending = Attending.unknown;
+int _attending = 0;
 StreamSubscription<DocumentSnapshot>? _attendingSubscription;
-Attending get attending => _attending;
-set attending(Attending attending) {
+int get attending => _attending;
+set attending(int attending) {
+  print('test');
   final userDoc = FirebaseFirestore.instance
       .collection('attendees')
       .doc(FirebaseAuth.instance.currentUser!.uid);
-  if (attending == Attending.yes) {
-    userDoc.set(<String, dynamic>{'attending': true});
-  } else {
-    userDoc.set(<String, dynamic>{'attending': false});
-  }
+    userDoc.set(<String, dynamic>{'attending': attending});
 }
 
   bool _loggedIn = false;
@@ -48,10 +48,12 @@ set attending(Attending attending) {
     ]);
      FirebaseFirestore.instance
         .collection('attendees')
-        .where('attending', isEqualTo: true)
         .snapshots()
         .listen((snapshot) {
-      _attendees = snapshot.docs.length;
+      //_attendees = 0;
+      for (final shot in snapshot.docs){
+        _attendees += shot.data()!['attending'] as int? ?? 0;
+      }
       notifyListeners();
     });
 
@@ -80,13 +82,10 @@ set attending(Attending attending) {
             .snapshots()
             .listen((snapshot) {
           if (snapshot.data() != null) {
-            if (snapshot.data()!['attending'] as bool) {
-              _attending = Attending.yes;
-            } else {
-              _attending = Attending.no;
-            }
+            snapshot.data()!['attending'] as int? ?? 0;
+             
           } else {
-            _attending = Attending.unknown;
+            _attending = 0;
           }
           notifyListeners();
         });
